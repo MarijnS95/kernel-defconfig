@@ -23,16 +23,16 @@ HEAD of the project used to prepare this commit:
 ${KERNEL_DEFCONFIG_URL}/tree/${KERNEL_DEFCONFIG_HEAD}
 EOM
 
-LOIRE="suzu kugo blanc"
+LOIRE="suzu"
 TONE="dora kagura keyaki"
-YOSHINO="lilac maple poplar"
-NILE="discovery pioneer voyager"
-GANGES="kirin mermaid"
-TAMA="akari apollo akatsuki"
+YOSHINO="poplar"
+NILE="discovery"
+GANGES="mermaid"
+TAMA="akatsuki"
 KUMANO="griffin bahamut"
 SEINE="pdx201"
 
-PLATFORMS="loire tone yoshino nile ganges tama kumano seine"
+PLATFORMS="yoshino nile ganges tama kumano seine"
 
 for platform in $PLATFORMS; do \
 
@@ -80,24 +80,16 @@ for device in $DEVICE; do \
     echo "================================================="
     echo "SOC -> ${SOC} :: Platform -> ${platform} :: Device -> $device"
     echo "Running scripts/kconfig/merge_config.sh ..."
-    ret=$(ARCH=arm64 O=${KERNEL_TMP} scripts/kconfig/merge_config.sh \
+    ARCH=arm64 O=${KERNEL_TMP} scripts/kconfig/merge_config.sh \
         ${KERNEL_CFG}/android-base.config \
         ${KERNEL_CFG}/android-recommended.config \
         ${KERNEL_CFG}/android-recommended-arm64.config \
         ${KERNEL_CFG}/base_${SOC}_defconfig \
         ${KERNEL_CFG}/base_${platform}_${device}_defconfig \
-        ${KERNEL_CFG}/android-extra.config 2>&1);
+        ${KERNEL_CFG}/android-extra.config
 
-
-
-    case "$ret" in
-        *"error"*|*"ERROR"*) echo "ERROR: $ret"; exit 1;;
-    esac
     echo "Building new defconfig ..."
-    ret=$(${BUILD} savedefconfig 2>&1);
-    case "$ret" in
-        *"error"*|*"ERROR"*) echo "ERROR: $ret"; exit 1;;
-    esac
+    ${BUILD} savedefconfig
     mv $KERNEL_TMP/defconfig ./arch/arm64/configs/aosp_${platform}_${device}_defconfig
 done
 done
