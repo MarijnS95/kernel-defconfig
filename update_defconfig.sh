@@ -85,7 +85,7 @@ for device in $DEVICE; do \
         ${KERNEL_CFG}/android-recommended.config \
         ${KERNEL_CFG}/android-recommended-arm64.config \
         ${KERNEL_CFG}/base_${SOC}_defconfig \
-        ${KERNEL_CFG}/base_${platform}"_"${device}\_defconfig \
+        ${KERNEL_CFG}/base_${platform}_${device}_defconfig \
         ${KERNEL_CFG}/android-extra.config 2>&1);
 
 
@@ -98,7 +98,7 @@ for device in $DEVICE; do \
     case "$ret" in
         *"error"*|*"ERROR"*) echo "ERROR: $ret"; exit 1;;
     esac
-    mv $KERNEL_TMP/defconfig ./arch/arm64/configs/aosp_$platform"_"$device\_defconfig
+    mv $KERNEL_TMP/defconfig ./arch/arm64/configs/aosp_${platform}_${device}_defconfig
 done
 done
 
